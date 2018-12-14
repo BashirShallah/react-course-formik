@@ -1,25 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Formik , Field} from "formik";
 
 class App extends Component {
+  
+  onSubmit = (values) => {
+    console.log(values);
+  }
+
+  form = (props) => {
+    return <form onSubmit={props.handleSubmit}>
+      <label>Name</label><br />
+      <Field name="name" /><br />
+      <label>Email</label><br />
+      <Field name="email" /><br />
+      <button type="submit">Send</button>
+    </form>
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Formik 
+          initialValues={{name: "bashir", email: ""}}
+          onSubmit={this.onSubmit}
+          render={this.form}
+          />
       </div>
     );
   }
