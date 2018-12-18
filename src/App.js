@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Formik , Field, ErrorMessage} from "formik";
+import {Formik , Field, ErrorMessage, FieldArray} from "formik";
 import * as Yup from "yup";
 
 class App extends Component {
@@ -43,6 +43,25 @@ class App extends Component {
       <Field name="social.twitter" /><br />
       <ErrorMessage name="social.twitter" /><br />
 
+      <FieldArray 
+        name="friends"
+        render={ arrayHelper => (
+          <div>
+            {props.values.friends.map((item, index)=>(
+              <div key={index}>
+                <Field name={`friends.${index}`} />
+                <button type="button"
+                  onClick={()=>arrayHelper.remove(index)}> - </button>
+                  <ErrorMessage name={`friends.${index}`} /><br />
+              </div>
+            ))}
+            
+            <button type="button"
+                  onClick={()=>arrayHelper.push('')}> + </button>
+          </div>
+        )}
+      />
+
       <button type="submit">Send</button>
     </form>
   }
@@ -57,6 +76,9 @@ class App extends Component {
         facebook: Yup.string().required('facebook is a required field'),
         twitter: Yup.string().required('twitter is a required field'),
       }),
+      friends: Yup.array().of(
+        Yup.string().required('Required '),
+      )
     });
 
     return schema;
@@ -75,7 +97,8 @@ class App extends Component {
             social: {
               facebook: "",
               twitter: "",
-            }
+            },
+            friends: ["Mhmd", "hsam"]
           }}
           onSubmit={this.onSubmit}
           render={this.form}
