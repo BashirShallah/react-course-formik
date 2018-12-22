@@ -47,6 +47,7 @@ class App extends Component {
         name="friends"
         render={ arrayHelper => (
           <div>
+            <h3>Friends</h3>
             {props.values.friends.map((item, index)=>(
               <div key={index}>
                 <Field name={`friends.${index}`} />
@@ -58,6 +59,30 @@ class App extends Component {
             
             <button type="button"
                   onClick={()=>arrayHelper.push('')}> + </button>
+          </div>
+        )}
+      />
+
+      <FieldArray 
+        name="phoneNumbers"
+        render={ arrayHelper => (
+          <div>
+            <h3>Phone Numbers</h3>
+            {props.values.phoneNumbers.map((item, index)=>(
+              <div key={index}>
+                <Field name={`phoneNumbers.${index}.number`} placeholder="number" />
+                <ErrorMessage name={`phoneNumbers.${index}.number`} /><br />
+
+                <Field name={`phoneNumbers.${index}.extension`} placeholder="extension"/>
+                <ErrorMessage name={`phoneNumbers.${index}.extension`} /><br />
+
+                <button type="button"
+                  onClick={()=>arrayHelper.remove(index)}> - </button>
+              </div>
+            ))}
+            
+            <button type="button"
+                  onClick={()=>arrayHelper.push({number:'', extension: ''})}> + </button>
           </div>
         )}
       />
@@ -78,7 +103,13 @@ class App extends Component {
       }),
       friends: Yup.array().of(
         Yup.string().required('Required '),
-      )
+      ),
+      phoneNumbers: Yup.array().of(
+        Yup.object().shape({
+          number: Yup.number().typeError('accept numbers only').required('number is a required field'),
+          extension: Yup.number().typeError('accept numbers only').required('extension is a required field'),
+        }),
+      ),
     });
 
     return schema;
@@ -98,7 +129,17 @@ class App extends Component {
               facebook: "",
               twitter: "",
             },
-            friends: ["Mhmd", "hsam"]
+            friends: ["Mhmd", "hsam"],
+            phoneNumbers: [
+              {
+                number: "012345",
+                extension: "12"
+              },
+              {
+                number: "78345",
+                extension: "43"
+              }
+            ]
           }}
           onSubmit={this.onSubmit}
           render={this.form}
